@@ -1,0 +1,99 @@
+﻿using System;
+using System.Collections.Generic;
+
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int position = 0;
+        ConsoleKeyInfo key;
+        DateTime date = DateTime.Now;
+
+        Console.WriteLine("Выберите дату:");
+
+        Dictionary<DateTime, List<Activity>> activitiesByDate = new Dictionary<DateTime, List<Activity>>();
+
+        DateTime date1 = date.AddDays(0);
+        List<Activity> activities1 = new List<Activity>
+        {
+            new Activity("Учеба"," Занятия до 4"," Мпт Плеханова")
+        };
+        activitiesByDate[date1] = activities1;
+
+        DateTime date2 = date.AddDays(1);
+        List<Activity> activities2 = new List<Activity>
+        {
+            new Activity("Cпортивные занятия"," Тренировка в тренажерном зале"," Фитнес зал"),
+            new Activity("Гулять"," Встретиться с друзьями"," По ситуации")
+        };
+        activitiesByDate[date2] = activities2;
+
+        DateTime date3 = date.AddDays(2);
+        List<Activity> activities3 = new List<Activity>
+        {
+            new Activity("В магазин"," Купить необходимые продукты"," Пятерочка"),
+            new Activity("Домашнее задание"," Вделать все работы"," Дом")
+        };
+        activitiesByDate[date3] = activities3;
+
+        do
+        {
+            Console.Clear();
+            Console.WriteLine("Выберите дату:");
+            Console.WriteLine(date.ToString("dd/MM/yyyy"));
+            Console.WriteLine();
+
+            if (activitiesByDate.ContainsKey(date))
+            {
+                List<Activity> activities = activitiesByDate[date];
+                for (int i = 0; i < activities.Count; i++)
+                {
+                    if (i == position)
+                        Console.WriteLine("-> Занятие " + (i + 1));
+                    else
+                        Console.WriteLine("   Занятие " + (i + 1));
+                }
+            }
+            else
+            {
+                Console.WriteLine("На эту дату занятий нет");
+            }
+            key = Console.ReadKey();
+
+            if (key.Key == ConsoleKey.UpArrow && position > 0)
+            {
+                position--;
+            }
+            else if (key.Key == ConsoleKey.DownArrow && position < 4)
+            {
+                position++;
+            }
+            else if (key.Key == ConsoleKey.RightArrow)
+            {
+                date = date.AddDays(1);
+            }
+            else if (key.Key == ConsoleKey.LeftArrow)
+            {
+                date = date.AddDays(-1);
+            }
+            else if (key.Key == ConsoleKey.Enter && activitiesByDate.ContainsKey(date) && activitiesByDate[date].Count > position)
+            {
+                DisplayActivityInfo(activitiesByDate[date][position]);
+                Console.WriteLine("Нажмите Enter, чтобы вернуться.");
+                Console.ReadLine();
+            }
+
+        } while (key.Key != ConsoleKey.Escape);
+    }
+
+    static void DisplayActivityInfo(Activity activity)
+    {
+        Console.Clear();
+        Console.WriteLine("Информация о занятии:");
+        Console.WriteLine(" Название: " + activity.Titles);
+        Console.WriteLine(" Описание:" + activity.Descriptions);
+        Console.WriteLine(" Место:" + activity.Locations);
+    }
+}
+
